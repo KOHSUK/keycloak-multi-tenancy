@@ -3,19 +3,19 @@ version: '3'
 tasks:
   build:
     cmds:
-      - go build -o main.exe main.go
+      - go build -o identityaccess ./identityaccess/main.go
     sources:
       - ./**/*.go
     generates:
-      - main.exe
+      - identityaccess
     method: timestamp
   
   run:
     cmds:
-      - ./main.exe
+      - ./identityaccess
     depends:
       - build
 
   clean:
     cmds:
-      - rm -f main.exe
+      - rm -f identityaccess
