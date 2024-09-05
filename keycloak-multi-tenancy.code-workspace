@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": ".",
+			"name": "root"
+		},
+		{
+			"path": "keycloak",
+		},
+		{
+			"path": "web"
+		},
+		{
+			"path": "api"
+		},
+		{
+			"path": "docs"
+		}
+	],
+	"settings": {}
+}

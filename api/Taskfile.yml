@@ -1,0 +1,21 @@
+version: '3'
+
+tasks:
+  build:
+    cmds:
+      - go build -o main.exe main.go
+    sources:
+      - ./**/*.go
+    generates:
+      - main.exe
+    method: timestamp
+  
+  run:
+    cmds:
+      - ./main.exe
+    depends:
+      - build
+
+  clean:
+    cmds:
+      - rm -f main.exe

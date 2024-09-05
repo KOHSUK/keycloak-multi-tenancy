@@ -1,0 +1,9 @@
+export function BriefcaseIcon(props: React.SVGProps<SVGSVGElement>) {
+  // ... existing BriefcaseIcon code ...
+}
+
+export function HomeIcon(props: React.SVGProps<SVGSVGElement>) {
+  // ... existing HomeIcon code ...
+}
+
+// ... other icon components ...
