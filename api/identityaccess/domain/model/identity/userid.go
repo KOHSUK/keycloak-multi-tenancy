@@ -9,3 +9,9 @@ type UserId struct {
 func (u UserId) String() string {
 	return u.Value.String()
 }
+
+func NewUserId(value uuid.UUID) UserId {
+	return UserId {
+        Value: value,
+	}
+}

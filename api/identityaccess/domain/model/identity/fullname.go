@@ -8,3 +8,10 @@ type FullName struct {
 func (f FullName) String() string {
 	return f.FirstName + " " + f.LastName
 }
+
+func NewFullName(firstName, lastName string) FullName {
+	return FullName {
+		FirstName: firstName,
+        LastName: lastName,
+	}
+}

@@ -15,7 +15,7 @@ func NewGormTenantRepository(connector connector.Connector) *GormTenantRepositor
 	return &GormTenantRepository{connector: connector}
 }
 
-func (r *GormTenantRepository) GetTenantById(ctx context.Context, id string) (*identity.Tenant, error) {
+func (r *GormTenantRepository) TenantOfId(ctx context.Context, id string) (*identity.Tenant, error) {
 	db := r.connector.GetDB()
 	var tenant tenant_model.Tenant
 	result := db.First(&tenant, "id = ?", id)
