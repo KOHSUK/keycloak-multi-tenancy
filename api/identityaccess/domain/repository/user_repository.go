@@ -6,6 +6,5 @@ import (
 )
 
 type UserRepository interface {
-	UserOfId(ctx context.Context, id string) (*identity.User, error)
-	Add(ctx context.Context, user *identity.User) error
+	UserOfId(ctx context.Context, id identity.UserId) (*identity.User, error)
 }

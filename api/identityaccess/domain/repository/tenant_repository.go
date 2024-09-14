@@ -6,7 +6,7 @@ import (
 )
 
 type TenantRepository interface {
-	TenantOfId(ctx context.Context, id string) (*identity.Tenant, error)
-	Add(ctx context.Context, tenant *identity.Tenant) error
+	TenantOfId(ctx context.Context, id identity.TenantId) (*identity.Tenant, error)
+	Save(ctx context.Context, tenant *identity.Tenant) error
 	NextIdentity(ctx context.Context) (*identity.TenantId, error)
 }
