@@ -1,4 +1,4 @@
-package tenant_model
+package model
 
 import (
 	"time"
