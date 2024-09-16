@@ -1,7 +1,7 @@
 package query_service
 
 import (
-	"api/identityaccess/infrastructure/query_service/gorm/connector"
+	"api/identityaccess/infrastructure/gorm/connector"
 	"api/identityaccess/usecase/query/query_service"
 	"context"
 

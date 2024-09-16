@@ -2,8 +2,8 @@ package tenant_repository
 
 import (
 	"api/identityaccess/domain/model/identity"
-	"api/identityaccess/infrastructure/repository/gorm/connector"
-	"api/identityaccess/infrastructure/repository/gorm/model"
+	"api/identityaccess/infrastructure/gorm/connector"
+	"api/identityaccess/infrastructure/gorm/repository/model"
 	"context"
 
 	"gorm.io/gorm/clause"
