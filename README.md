@@ -2,5 +2,5 @@
 
 Working in progress!
 
-# Setting up Keycloakk
+# Setting up Keycloak
 
