@@ -1,9 +1,9 @@
-package tenant_repository
+package tenant
 
 import (
 	"api/identityaccess/domain/model/identity"
 	"api/identityaccess/infrastructure/gorm/connector"
-	"api/identityaccess/infrastructure/gorm/repository/model"
+	userModel "api/identityaccess/infrastructure/gorm/repository/user"
 	"context"
 
 	"gorm.io/gorm/clause"
@@ -19,7 +19,7 @@ func NewGormTenantRepository(connector connector.Connector) *GormTenantRepositor
 
 func (r *GormTenantRepository) TenantOfId(ctx context.Context, id string) (*identity.Tenant, error) {
 	db := r.connector.GetDB()
-	var tenant model.Tenant
+	var tenant Tenant
 	result := db.First(&tenant, "id = ?", id)
 	if result.Error != nil {
 		return nil, result.Error
@@ -35,26 +35,26 @@ func (r *GormTenantRepository) Save(ctx context.Context, tenant *identity.Tenant
 	result := db.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "id"}},
 		DoUpdates: clause.Assignments(map[string]interface{}{"name": tenant.Name}),
-	}).Create(&model.Tenant{
-		ID:   tenant.ID.Value,
-		Name: tenant.Name,
+	}).Create(&Tenant{
+		ID:     tenant.ID.Value,
+		Name:   tenant.Name,
+		Active: tenant.Active,
 	})
 	if result.Error != nil {
 		return result.Error
 	}
 
-	var users []model.User
+	var users []userModel.User
 	for _, user := range tenant.TenantMembers {
-		users = append(users, model.User{
+		users = append(users, userModel.User{
 			ID:       user.UserId.Value,
 			TenantId: tenant.ID.Value,
+			Active:   tenant.Active,
 		})
 	}
 
-	result = db.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "id"}},
-		DoUpdates: clause.AssignmentColumns([]string{"tenant_id"}),
-	}).Create(&users)
+	// Save Users
+	result = db.Clauses(clause.OnConflict{DoNothing: true}).Create(&users)
 
 	if result.Error != nil {
 		return result.Error

@@ -1,4 +1,4 @@
-package identity
+package model
 
 type FullName struct {
 	FirstName string
@@ -10,8 +10,8 @@ func (f FullName) String() string {
 }
 
 func NewFullName(firstName, lastName string) FullName {
-	return FullName {
+	return FullName{
 		FirstName: firstName,
-        LastName: lastName,
+		LastName:  lastName,
 	}
 }

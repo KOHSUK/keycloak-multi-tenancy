@@ -1,4 +1,4 @@
-package identity
+package model
 
 type TenantMember struct {
 	TenantId TenantId

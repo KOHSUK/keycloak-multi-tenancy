@@ -1,4 +1,4 @@
-package identity
+package model
 
 import "github.com/google/uuid"
 
@@ -11,7 +11,7 @@ func (u UserId) String() string {
 }
 
 func NewUserId(value uuid.UUID) UserId {
-	return UserId {
-        Value: value,
+	return UserId{
+		Value: value,
 	}
 }

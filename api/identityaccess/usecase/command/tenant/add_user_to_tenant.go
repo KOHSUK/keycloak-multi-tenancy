@@ -12,6 +12,6 @@ type AddUserToTenantCommand struct {
 	TenantId uuid.UUID
 }
 
-type AddUserToTenantCommandUseCase interface {
+type AddUserToTenantUseCase interface {
 	Handle(ctx context.Context, command AddUserToTenantCommand) error
 }
