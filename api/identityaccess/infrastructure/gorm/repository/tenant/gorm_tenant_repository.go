@@ -1,7 +1,7 @@
 package tenant
 
 import (
-	"api/identityaccess/domain/model/identity"
+	"api/identityaccess/domain/identity/model"
 	"api/identityaccess/infrastructure/gorm/connector"
 	userModel "api/identityaccess/infrastructure/gorm/repository/user"
 	"context"
@@ -17,20 +17,20 @@ func NewGormTenantRepository(connector connector.Connector) *GormTenantRepositor
 	return &GormTenantRepository{connector: connector}
 }
 
-func (r *GormTenantRepository) TenantOfId(ctx context.Context, id string) (*identity.Tenant, error) {
+func (r *GormTenantRepository) TenantOfId(ctx context.Context, id string) (*model.Tenant, error) {
 	db := r.connector.GetDB()
 	var tenant Tenant
 	result := db.First(&tenant, "id = ?", id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	return &identity.Tenant{
-		ID:   identity.NewTenantId(tenant.ID),
+	return &model.Tenant{
+		ID:   model.NewTenantId(tenant.ID),
 		Name: tenant.Name,
 	}, nil
 }
 
-func (r *GormTenantRepository) Save(ctx context.Context, tenant *identity.Tenant) error {
+func (r *GormTenantRepository) Save(ctx context.Context, tenant *model.Tenant) error {
 	db := r.connector.GetDB()
 	result := db.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "id"}},

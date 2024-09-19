@@ -1,9 +1,11 @@
 package tenant
 
 import (
+	"api/identityaccess/domain/identity/model"
 	"api/identityaccess/domain/identity/repository"
 	"api/identityaccess/usecase/command/tenant"
 	"context"
+	"errors"
 )
 
 type ProvisionTenantCommandHandler struct {
@@ -15,5 +17,14 @@ func NewProvisionTenantCommandHandler(tenantRepository repository.TenantReposito
 }
 
 func (h *ProvisionTenantCommandHandler) Handle(ctx context.Context, command tenant.ProvisionTenantCommand) error {
-	tenant, err := h.tenantRepository.TenantOfId(ctx, command.TenantId)
+	tenant, err := h.tenantRepository.TenantOfId(ctx, model.NewTenantId(command.TenantId))
+	if err != nil {
+		return err
+	}
+
+	if tenant != nil && tenant.Active {
+		return errors.New("tenant already provisioned")
+	}
+
+	return nil
 }
