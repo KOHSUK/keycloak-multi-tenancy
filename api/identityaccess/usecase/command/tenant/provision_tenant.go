@@ -2,12 +2,10 @@ package tenant
 
 import (
 	"context"
-
-	"github.com/google/uuid"
 )
 
 type ProvisionTenantCommand struct {
-	TenantId uuid.UUID
+	Name string
 }
 
 type ProvisionTenantUseCase interface {

@@ -1,7 +1,7 @@
 package tenant
 
 import (
-	"api/identityaccess/domain/identity/model"
+	"api/identityaccess/domain/identity/factory"
 	"api/identityaccess/domain/identity/repository"
 	"api/identityaccess/usecase/command/tenant"
 	"context"
@@ -10,20 +10,26 @@ import (
 
 type ProvisionTenantCommandHandler struct {
 	tenantRepository repository.TenantRepository
+	tenantFactory    factory.TenantFactory
 }
 
-func NewProvisionTenantCommandHandler(tenantRepository repository.TenantRepository) *ProvisionTenantCommandHandler {
-	return &ProvisionTenantCommandHandler{tenantRepository: tenantRepository}
+func NewProvisionTenantCommandHandler(tenantRepository *repository.TenantRepository, tenantFactory *factory.TenantFactory) *ProvisionTenantCommandHandler {
+	return &ProvisionTenantCommandHandler{tenantRepository: *tenantRepository, tenantFactory: *tenantFactory}
 }
 
 func (h *ProvisionTenantCommandHandler) Handle(ctx context.Context, command tenant.ProvisionTenantCommand) error {
-	tenant, err := h.tenantRepository.TenantOfId(ctx, model.NewTenantId(command.TenantId))
+	tenantId, err := h.tenantRepository.NextIdentity(ctx)
 	if err != nil {
 		return err
 	}
 
-	if tenant != nil && tenant.Active {
-		return errors.New("tenant already provisioned")
+	tenant, err := h.tenantFactory.NewTenant(*tenantId, command.Name)
+	if err != nil {
+		return err
+	}
+
+	if tenant == nil {
+		return errors.New("could not create tenant")
 	}
 
 	return nil
