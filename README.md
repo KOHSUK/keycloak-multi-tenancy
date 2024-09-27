@@ -10,4 +10,9 @@ Working in progress!
 
 # Web
 
+```
+npm i
+npm run dev
+```
+
 # API
