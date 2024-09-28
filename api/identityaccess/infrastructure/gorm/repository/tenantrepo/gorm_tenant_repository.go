@@ -6,6 +6,7 @@ import (
 	userModel "api/identityaccess/infrastructure/gorm/repository/user"
 	"context"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm/clause"
 )
 
@@ -17,10 +18,10 @@ func NewGormTenantRepository(connector connector.Connector) *GormTenantRepositor
 	return &GormTenantRepository{connector: connector}
 }
 
-func (r *GormTenantRepository) TenantOfId(ctx context.Context, id string) (*model.Tenant, error) {
+func (r *GormTenantRepository) TenantOfId(ctx context.Context, id model.TenantId) (*model.Tenant, error) {
 	db := r.connector.GetDB()
 	var tenant Tenant
-	result := db.First(&tenant, "id = ?", id)
+	result := db.First(&tenant, "id = ?", id.Value)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -61,4 +62,8 @@ func (r *GormTenantRepository) Save(ctx context.Context, tenant *model.Tenant) e
 	}
 
 	return result.Error
+}
+
+func (r *GormTenantRepository) NextIdentity(ctx context.Context) *model.TenantId {
+	return &model.TenantId{Value: uuid.New()}
 }

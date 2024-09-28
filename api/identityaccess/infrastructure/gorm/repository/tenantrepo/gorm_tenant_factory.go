@@ -13,7 +13,7 @@ func NewGormTenantFactory() *GormTenantFactory {
 	return &GormTenantFactory{}
 }
 
-func (f *GormTenantFactory) NewTenant(id model.TenantId, name string) *model.Tenant {
+func (f *GormTenantFactory) NewTenant(id model.TenantId, name string) (*model.Tenant, error) {
 	// insert tenant into database and return tenant
 	tenant := &model.Tenant{
 		ID:     id,
@@ -24,5 +24,5 @@ func (f *GormTenantFactory) NewTenant(id model.TenantId, name string) *model.Ten
 	db := f.connector.GetDB()
 	db.Create(tenant)
 
-	return tenant
+	return tenant, nil
 }

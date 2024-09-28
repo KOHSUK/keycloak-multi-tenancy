@@ -9,8 +9,12 @@ type PostgresConnector struct {
 	db *gorm.DB
 }
 
-func NewPostgresConnector(dsn string) (*PostgresConnector, error) {
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+type PostgresConnectorConfig struct {
+	DSN string
+}
+
+func NewPostgresConnector(config PostgresConnectorConfig) (*PostgresConnector, error) {
+	db, err := gorm.Open(postgres.Open(config.DSN), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}

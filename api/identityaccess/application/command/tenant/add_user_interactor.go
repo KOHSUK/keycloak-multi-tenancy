@@ -3,7 +3,7 @@ package tenant
 import (
 	"api/identityaccess/domain/identity/model"
 	"api/identityaccess/domain/identity/repository"
-	"api/identityaccess/usecase/command/tenant"
+	"api/identityaccess/usecase/command/uctenant"
 	"context"
 )
 
@@ -16,7 +16,7 @@ func NewAddUserToTenantCommandHandler(userRepository repository.UserRepository) 
 	return &AddUserToTenantCommandHandler{userRepository: userRepository}
 }
 
-func (h *AddUserToTenantCommandHandler) Handle(ctx context.Context, command tenant.AddUserToTenantCommand) error {
+func (h *AddUserToTenantCommandHandler) Handle(ctx context.Context, command uctenant.AddUserToTenantCommand) error {
 	// FIXME: use Factory instead of repository
 	user, err := h.userRepository.UserOfId(ctx, model.NewUserId(command.UserID))
 	if err != nil {

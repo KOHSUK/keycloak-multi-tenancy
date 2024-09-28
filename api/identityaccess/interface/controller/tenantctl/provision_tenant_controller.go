@@ -1,15 +1,15 @@
 package tenantctl
 
 import (
-	"api/identityaccess/usecase/command/tenant"
+	"api/identityaccess/usecase/command/uctenant"
 	"context"
 )
 
 type ProvisionTenantController struct {
-	usecase tenant.ProvisionTenantUseCase
+	usecase uctenant.ProvisionTenantUseCase
 }
 
-func NewProvisionTenantController(usecase tenant.ProvisionTenantUseCase) *ProvisionTenantController {
+func NewProvisionTenantController(usecase uctenant.ProvisionTenantUseCase) *ProvisionTenantController {
 	return &ProvisionTenantController{usecase: usecase}
 }
 
@@ -22,7 +22,7 @@ func (c *ProvisionTenantController) Handle(ctx context.Context, req ProvisionTen
 		panic("usecase is not initialized")
 	}
 
-	c.usecase.Handle(ctx, tenant.ProvisionTenantCommand{
+	c.usecase.Handle(ctx, uctenant.ProvisionTenantCommand{
 		Name: req.TenantName,
 	})
 }

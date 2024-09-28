@@ -1,15 +1,15 @@
-version: '3'
+version: "3"
 
 tasks:
   build:
     cmds:
-      - go build -o identityaccess ./identityaccess/main.go
+      - go build -o idapi ./identityaccess/main.go
     sources:
       - ./**/*.go
     generates:
       - identityaccess
     method: timestamp
-  
+
   run:
     cmds:
       - ./identityaccess
