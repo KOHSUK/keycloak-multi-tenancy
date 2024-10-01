@@ -4,3 +4,7 @@ CREATE TABLE users (
     last_name VARCHAR(100),
 );
 
+
+CREATE TABLE group {
+    id UUID PRIMARY_KEY
+}
