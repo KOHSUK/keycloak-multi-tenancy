@@ -7,6 +7,7 @@ import (
 	"api/identityaccess/infrastructure/chi/tenantroute"
 	"api/identityaccess/infrastructure/gorm/connector"
 	"api/identityaccess/infrastructure/gorm/repository/tenantrepo"
+	"api/identityaccess/infrastructure/inmemory/repository/inmemtenantrepo"
 	"api/identityaccess/interface/controller/tenantctl"
 	"api/identityaccess/usecase/command/uctenant"
 	"context"
@@ -15,17 +16,15 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/fx"
+	"go.uber.org/fx/fxevent"
+	"go.uber.org/zap"
 )
 
 type Server struct {
 	mux *chi.Mux
 }
 
-func NewServer(lc fx.Lifecycle, routes *Routes) *Server {
-	mux := chi.NewRouter()
-
-	mux.Post("/provision-tenant", routes.provisionTenantRoute.ServeHTTP)
-
+func NewServer(lc fx.Lifecycle, mux *chi.Mux) *Server {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			go func() {
@@ -39,12 +38,29 @@ func NewServer(lc fx.Lifecycle, routes *Routes) *Server {
 	return &Server{mux: mux}
 }
 
+func NewServeMux(routes *Routes) *chi.Mux {
+	mux := chi.NewMux()
+
+	mux.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Health check")
+		w.Write([]byte("OK"))
+	})
+	mux.Post("/provision-tenant", routes.provisionTenantRoute.ServeHTTP)
+
+	return mux
+}
+
 func Start() {
 	app := fx.New(
+		fx.WithLogger(func(log *zap.Logger) fxevent.Logger {
+			return &fxevent.ZapLogger{Logger: log}
+		}),
 		fx.Supply(connector.PostgresConnectorConfig{
 			DSN: "host=localhost port=5432 user=postgres dbname=postgres password=postgres sslmode=disable",
 		}),
 		fx.Provide(
+			NewServer,
+			NewServeMux,
 			connector.NewPostgresConnector,
 			tenantrepo.NewGormTenantFactory,
 			fx.Annotate(
@@ -56,18 +72,18 @@ func Start() {
 				fx.As(new(uctenant.ProvisionTenantUseCase)),
 			),
 			fx.Annotate(
-				tenantrepo.NewGormTenantFactory,
+				inmemtenantrepo.NewInMemTenantFactory,
 				fx.As(new(factory.TenantFactory)),
 			),
 			fx.Annotate(
-				tenantrepo.NewGormTenantRepository,
+				inmemtenantrepo.NewInMemTenantRepository,
 				fx.As(new(repository.TenantRepository)),
 			),
 			tenant.NewProvisionTenantCommandHandler,
 			tenantctl.NewProvisionTenantController,
 			tenantroute.NewProvisionTenantRoute,
 			NewRoutes,
-			NewServer,
+			zap.NewExample,
 		),
 		fx.Invoke(func(*Server) {}),
 	)

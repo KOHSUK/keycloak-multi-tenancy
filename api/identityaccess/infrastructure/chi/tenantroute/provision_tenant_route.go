@@ -3,22 +3,33 @@ package tenantroute
 import (
 	"api/identityaccess/interface/controller/tenantctl"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 type ProvisionTenantRoute struct {
-	controller tenantctl.ProvisionTenantController
+	controller *tenantctl.ProvisionTenantController
+	logger     *zap.Logger
 }
 
-func NewProvisionTenantRoute(controller *tenantctl.ProvisionTenantController) *ProvisionTenantRoute {
+func NewProvisionTenantRoute(controller *tenantctl.ProvisionTenantController, logger *zap.Logger) *ProvisionTenantRoute {
 	return &ProvisionTenantRoute{
-		controller: *controller,
+		controller: controller,
+		logger:     logger,
 	}
 }
 
 func (r *ProvisionTenantRoute) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	r.controller.Handle(req.Context(), tenantctl.ProvisionTenantRequest{
+	err := r.controller.Handle(req.Context(), tenantctl.ProvisionTenantRequest{
 		TenantName: req.FormValue("tenant_name"),
 	})
+
+	if err != nil {
+		r.logger.Error("Failed to provision tenant", zap.Error(err))
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
 
 	w.Write([]byte("OK"))
 }

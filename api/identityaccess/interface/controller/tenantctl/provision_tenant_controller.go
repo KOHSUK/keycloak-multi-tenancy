@@ -17,12 +17,18 @@ type ProvisionTenantRequest struct {
 	TenantName string
 }
 
-func (c *ProvisionTenantController) Handle(ctx context.Context, req ProvisionTenantRequest) {
+func (c *ProvisionTenantController) Handle(ctx context.Context, req ProvisionTenantRequest) error {
 	if c.usecase == nil {
 		panic("usecase is not initialized")
 	}
 
-	c.usecase.Handle(ctx, uctenant.ProvisionTenantCommand{
+	err := c.usecase.Handle(ctx, uctenant.ProvisionTenantCommand{
 		Name: req.TenantName,
 	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
