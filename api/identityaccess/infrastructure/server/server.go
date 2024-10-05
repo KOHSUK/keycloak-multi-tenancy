@@ -24,18 +24,23 @@ type Server struct {
 	mux *chi.Mux
 }
 
-func NewServer(lc fx.Lifecycle, mux *chi.Mux) *Server {
+func NewServer(lc fx.Lifecycle, mux *chi.Mux, logger *zap.Logger) *Server {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			go func() {
-				fmt.Println("Starting HTTP server at :8080")
-				http.ListenAndServe(":8080", mux)
+				err := http.ListenAndServe(":7070", mux)
+				if err != nil {
+					logger.Error("Error starting HTTP server", zap.Error(err))
+				}
+				logger.Info("HTTP server started at :7070")
 			}()
 			return nil
 		},
 	})
 
-	return &Server{mux: mux}
+	server := &Server{mux: mux}
+
+	return server
 }
 
 func NewServeMux(routes *Routes) *chi.Mux {
@@ -61,7 +66,6 @@ func Start() {
 		fx.Provide(
 			NewServer,
 			NewServeMux,
-			connector.NewPostgresConnector,
 			tenantrepo.NewGormTenantFactory,
 			fx.Annotate(
 				connector.NewPostgresConnector,
