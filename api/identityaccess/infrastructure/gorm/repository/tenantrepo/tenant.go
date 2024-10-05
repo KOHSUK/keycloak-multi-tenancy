@@ -12,5 +12,5 @@ type Tenant struct {
 	Active    bool
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt time.Time
+	DeletedAt time.Time `gorm:"index"`
 }
