@@ -7,7 +7,6 @@ import (
 	"api/identityaccess/infrastructure/chi/tenantroute"
 	"api/identityaccess/infrastructure/gorm/connector"
 	"api/identityaccess/infrastructure/gorm/repository/tenantrepo"
-	"api/identityaccess/infrastructure/inmemory/repository/inmemtenantrepo"
 	"api/identityaccess/interface/controller/tenantctl"
 	"api/identityaccess/usecase/command/uctenant"
 	"context"
@@ -66,7 +65,6 @@ func Start() {
 		fx.Provide(
 			NewServer,
 			NewServeMux,
-			tenantrepo.NewGormTenantFactory,
 			fx.Annotate(
 				connector.NewPostgresConnector,
 				fx.As(new(connector.Connector)),
@@ -76,11 +74,11 @@ func Start() {
 				fx.As(new(uctenant.ProvisionTenantUseCase)),
 			),
 			fx.Annotate(
-				inmemtenantrepo.NewInMemTenantFactory,
+				tenantrepo.NewGormTenantFactory,
 				fx.As(new(factory.TenantFactory)),
 			),
 			fx.Annotate(
-				inmemtenantrepo.NewInMemTenantRepository,
+				tenantrepo.NewGormTenantRepository,
 				fx.As(new(repository.TenantRepository)),
 			),
 			tenant.NewProvisionTenantCommandHandler,

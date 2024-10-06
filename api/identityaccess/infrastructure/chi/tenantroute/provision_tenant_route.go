@@ -21,7 +21,7 @@ func NewProvisionTenantRoute(controller *tenantctl.ProvisionTenantController, lo
 
 func (r *ProvisionTenantRoute) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	err := r.controller.Handle(req.Context(), tenantctl.ProvisionTenantRequest{
-		TenantName: req.FormValue("tenant_name"),
+		TenantName: "test tenant",
 	})
 
 	if err != nil {

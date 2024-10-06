@@ -6,6 +6,7 @@ import (
 	"api/identityaccess/usecase/command/uctenant"
 	"context"
 	"errors"
+	"fmt"
 )
 
 type ProvisionTenantCommandHandler struct {
@@ -18,6 +19,8 @@ func NewProvisionTenantCommandHandler(tenantRepository repository.TenantReposito
 }
 
 func (h *ProvisionTenantCommandHandler) Handle(ctx context.Context, command uctenant.ProvisionTenantCommand) error {
+	fmt.Println("ProvisionTenantCommandHandler.Handle")
+
 	tenantId := h.tenantRepository.NextIdentity(ctx)
 
 	tenant, err := h.tenantFactory.NewTenant(*tenantId, command.Name)

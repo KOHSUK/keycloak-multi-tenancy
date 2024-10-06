@@ -3,26 +3,35 @@ package tenantrepo
 import (
 	"api/identityaccess/domain/identity/model"
 	"api/identityaccess/infrastructure/gorm/connector"
+	"fmt"
 )
 
 type GormTenantFactory struct {
 	connector connector.Connector
 }
 
-func NewGormTenantFactory() *GormTenantFactory {
-	return &GormTenantFactory{}
+func NewGormTenantFactory(connector connector.Connector) *GormTenantFactory {
+	return &GormTenantFactory{connector: connector}
 }
 
 func (f *GormTenantFactory) NewTenant(id model.TenantId, name string) (*model.Tenant, error) {
+	fmt.Println("GormTenantFactory.NewTenant")
 	// insert tenant into database and return tenant
-	tenant := &model.Tenant{
-		ID:     id,
+	tenant := &Tenant{
+		ID:     id.Value,
 		Name:   name,
 		Active: false,
 	}
 
 	db := f.connector.GetDB()
-	db.Create(tenant)
+	err := db.Create(tenant).Error
+	if err != nil {
+		fmt.Println("Error creating tenant:", err)
+		return nil, err
+	}
 
-	return tenant, nil
+	return &model.Tenant{
+		ID:   id,
+		Name: name,
+	}, nil
 }
