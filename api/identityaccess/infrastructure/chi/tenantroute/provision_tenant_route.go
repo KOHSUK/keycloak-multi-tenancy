@@ -2,6 +2,7 @@ package tenantroute
 
 import (
 	"api/identityaccess/interface/controller/tenantctl"
+	"encoding/json"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -19,9 +20,21 @@ func NewProvisionTenantRoute(controller *tenantctl.ProvisionTenantController, lo
 	}
 }
 
+type ProvisionTenantRequest struct {
+	Name string `json:"name"`
+}
+
 func (r *ProvisionTenantRoute) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	err := r.controller.Handle(req.Context(), tenantctl.ProvisionTenantRequest{
-		TenantName: "test tenant",
+	var ptr ProvisionTenantRequest
+	err := json.NewDecoder(req.Body).Decode(&ptr)
+
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	err = r.controller.Handle(req.Context(), tenantctl.ProvisionTenantRequest{
+		TenantName: ptr.Name,
 	})
 
 	if err != nil {
