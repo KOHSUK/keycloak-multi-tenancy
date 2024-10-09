@@ -15,7 +15,6 @@ func NewGormTenantFactory(connector connector.Connector) *GormTenantFactory {
 }
 
 func (f *GormTenantFactory) NewTenant(id model.TenantId, name string) (*model.Tenant, error) {
-	fmt.Println("GormTenantFactory.NewTenant")
 	// insert tenant into database and return tenant
 	tenant := &Tenant{
 		ID:     id.Value,
