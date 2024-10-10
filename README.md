@@ -16,3 +16,14 @@ npm run dev
 ```
 
 # API
+
+```
+# DB migration
+task dbmigration
+
+# Build
+task build
+
+# Start
+./idapi
+```
