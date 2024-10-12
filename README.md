@@ -1,7 +1,5 @@
 # Keycloak Multi Tenancy
 
-Working in progress!
-
 # Keycloak を設定する
 
 以下を参考に設定を行います。
