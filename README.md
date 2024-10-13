@@ -24,4 +24,8 @@ task build
 
 # Start
 ./idapi
+
+# health check
+curl http://localhost:7070/health
+
 ```
