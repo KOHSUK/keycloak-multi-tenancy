@@ -1,19 +1,19 @@
 # Keycloak Multi Tenancy
 
-# Keycloak を設定する
+## Keycloak を設定する
 
 以下を参考に設定を行います。
 
-[Keycloakの設定方法](./keycloak/setup.md)
+[Keycloak の設定方法](./keycloak/setup.md)
 
-# Web
+## Web
 
 ```
 npm i
 npm run dev
 ```
 
-# API
+## API
 
 ```
 # DB migration
